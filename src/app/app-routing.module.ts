@@ -20,12 +20,8 @@ const routes: Routes = [
       (next: ActivatedRouteSnapshot) => {
         const service = inject(UserService);
         return service
-          .isLoggedIn()
-          .pipe(
-            map((isLoggedIn) =>
-              isLoggedIn
-                ? true
-                : createUrlTreeFromSnapshot(next, ['/', 'login'])
+          .isLoggedIn().pipe(
+            map((isLoggedIn) => isLoggedIn ? true : createUrlTreeFromSnapshot(next, ['/', 'login'])
             )
           );
       },
