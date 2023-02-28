@@ -1,14 +1,18 @@
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import {
+  ActivatedRouteSnapshot,
+  createUrlTreeFromSnapshot,
+} from '@angular/router';
+import { map } from 'rxjs';
 import { UserService } from './user.service';
 
-export const authGuard = () => {
-  const router = inject(Router);
+export const authGuard = (next: ActivatedRouteSnapshot) => {
   const service = inject(UserService);
-  return service.isLoggedIn().pipe(
-    tap((value) => {
-      return !value ? router.navigate(['/login']) : true;
-    })
-  );
+  return service
+    .isLoggedIn()
+    .pipe(
+      map((isLoggedIn) =>
+        isLoggedIn ? true : createUrlTreeFromSnapshot(next, ['/', 'login'])
+      )
+    );
 };
